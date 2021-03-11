@@ -12,7 +12,7 @@ repositories {
 
 javafx {
     version = "15.0.1"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 dependencies {
@@ -30,7 +30,7 @@ compileJava {
     }
 }
 
-mainClassName='GUI'
+mainClassName = 'application.GUI'
 
 run {
     doFirst {
@@ -38,6 +38,43 @@ run {
                 '--module-path', classpath.asPath,
                 '--add-modules', 'javafx.controls,javafx.fxml'
         ]
+    }
+}
+
+// Build all components when building the project
+task buildComponents(type: Task, group: "build") {
+    // Always run build of components (they cache it themselves)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def rootFile = new File(projectDir, "components")
+        recurseFiles(rootFile)
+    }
+}
+
+tasks.compileJava.dependsOn(buildComponents)
+
+// Clean all components when cleaning the project
+task cleanComponents(type: Task, group: "build") {
+    // Always run build of components (they cache it themselves)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def rootFile = new File(projectDir, "components")
+        recurseFiles(rootFile, "clean")
+    }
+}
+
+tasks.clean.dependsOn(cleanComponents)
+
+void recurseFiles(File base, String command = "build") {
+    if (base.exists() && base.isDirectory()) {
+        if (base.list().contains("build.gradle")) {
+            Runtime.runtime.exec("./gradlew.bat $command", null, base)
+        }
+        else {
+            base.listFiles().each { it -> recurseFiles(it, command) }
+        }
     }
 }
 

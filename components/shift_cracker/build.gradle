@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+}
+
+group 'dhbw'
+version null
+
+repositories {
+    mavenCentral()
+}
+
+task buildJar(type: Jar) {
+    project.archivesBaseName = "shift_cracker"
+
+    manifest {
+        attributes["Main-Class"] = "Shift_cracker"
+    }
+
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task signJar(type: Task) {
+    inputs.dir(buildDir.path + "/libs")
+    outputs.dir(buildDir.path + "/libs")
+
+    dependsOn(buildJar)
+
+    doLast {
+        def jarsigner = System.properties.getOrDefault("java.home", "") + File.separator + "bin" + File.separator + "jarsigner"
+        def keystore = new File(projectDir.parentFile, "msa.keystore.jks").absolutePath
+        def bashLine = [jarsigner,
+                        "-keystore", keystore,
+                        "-storepass", "msa123",
+                        "-keypass", "msa123",
+                        "$buildDir/libs/*.jar",
+                        "-tsa", "http://timestamp.digicert.com",
+                        "dhbw_cryptography"]
+        println(bashLine.join(" "))
+        def process = bashLine.execute()
+        process.waitFor()
+
+        if (process.exitValue() == 0) {
+            logger.info("Signed Jar successfully.")
+        }
+        else {
+            throw new RuntimeException("Could not sign jar.")
+        }
+    }
+}
+
+tasks.build.dependsOn(tasks.signJar)

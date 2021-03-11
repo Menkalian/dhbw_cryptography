@@ -1,3 +1,5 @@
+package application;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,6 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.hsqldb.server.HsqlServerFactory;
 
 public class GUI extends Application {
     public void start(Stage primaryStage) {

@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS postbox_{{PARTICIPANT}}
+(
+    id                  TINYINT     NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1),
+    participant_from_id TINYINT     NOT NULL,
+    message             VARCHAR(50) NOT NULL,
+    timestamp           INTEGER,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (participant_from_id) REFERENCES participants (id),
+);
