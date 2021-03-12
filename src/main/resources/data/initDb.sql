@@ -1,3 +1,10 @@
+DROP TABLE messages;
+DROP TABLE channel;
+DROP TABLE participants;
+DROP TABLE types;
+DROP TABLE algorithms;
+COMMIT;
+
 CREATE TABLE IF NOT EXISTS algorithms
 (
     id   TINYINT     NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1),
@@ -55,8 +62,7 @@ CREATE TABLE IF NOT EXISTS messages
     FOREIGN KEY (algorithm_id) REFERENCES algorithms (id)
 );
 
--- Delete all data
-TRUNCATE SCHEMA public;
+COMMIT;
 
 -- Fill in algorithms
 INSERT INTO algorithms

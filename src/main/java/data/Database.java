@@ -12,6 +12,13 @@ import java.util.Objects;
 
 @SuppressWarnings({"FieldCanBeLocal", "SameParameterValue"})
 public class Database {
+    private static final Database instance;
+
+    static {
+        instance = new Database();
+        Configuration.instance.msaDatabase = instance;
+    }
+
     private final String driverPrefix = "jdbc:hsqldb:";
     private final String databaseUser = "sa";
     private final String databasePassword = "";
@@ -35,8 +42,6 @@ public class Database {
             System.out.println("Database could not be initialized! Shuting down!");
             System.exit(1);
         }
-
-        Configuration.instance.msaDatabase = this;
     }
 
     private String loadSql(String filename) throws IOException {
