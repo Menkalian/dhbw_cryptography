@@ -1,8 +1,8 @@
-DROP TABLE messages;
-DROP TABLE channel;
-DROP TABLE participants;
-DROP TABLE types;
-DROP TABLE algorithms;
+DROP TABLE messages IF EXISTS;
+DROP TABLE channel IF EXISTS;
+DROP TABLE participants IF EXISTS;
+DROP TABLE types IF EXISTS;
+DROP TABLE algorithms IF EXISTS;
 COMMIT;
 
 CREATE TABLE IF NOT EXISTS algorithms

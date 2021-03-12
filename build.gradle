@@ -17,6 +17,8 @@ javafx {
 
 dependencies {
     implementation group: 'org.hsqldb', name: 'hsqldb', version: '2.5.1'
+    implementation 'com.google.guava:guava:30.0-jre'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
