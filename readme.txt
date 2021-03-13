@@ -1,6 +1,9 @@
 S1: 4485500
 S2: 2627585
 
+NOTE: Wir haben die Datenbank bereits aufgesetzt bevor Sie das Codebeispiel geschickt haben.
+Daher wird sich der Setup-Code vermutlich unterscheiden, aber die Datenbankstruktur bleibt gleich.
+
 01 [S1 und S2] Basisarchitektur
 
 02 [S1] Taste [F3], Debug-Modus
