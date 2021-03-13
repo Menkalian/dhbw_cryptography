@@ -32,10 +32,14 @@ public class Database {
             dbConnection = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 
             // (Re)initialize DB
+            String dropScript = loadSql("dropTables.sql");
             String initScript = loadSql("initDb.sql");
+            String initDataScript = loadSql("initData.sql");
 
             Statement statement = dbConnection.createStatement();
+            statement.execute(dropScript);
             statement.execute(initScript);
+            statement.execute(initDataScript);
             statement.close();
         } catch (Exception ex) {
             ex.printStackTrace();

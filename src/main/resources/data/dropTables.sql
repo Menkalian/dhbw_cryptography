@@ -1,0 +1,5 @@
+DROP TABLE messages IF EXISTS;
+DROP TABLE channel IF EXISTS;
+DROP TABLE participants IF EXISTS;
+DROP TABLE types IF EXISTS;
+DROP TABLE algorithms IF EXISTS;
