@@ -1,5 +1,5 @@
 .gradle
-**/build/
-!gradle-wrapper.jar
 .idea
-**/data/
+!gradle-wrapper.jar
+**/build/
+data/
