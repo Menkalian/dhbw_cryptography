@@ -12,6 +12,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import network.EnterpriseNetwork;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class GUI extends Application {
     private final IInterpreter interpreter = new CQLInterpreter(new EnterpriseNetwork());
 
@@ -67,12 +73,44 @@ public class GUI extends Application {
                     break;
                 case F8:
                     System.out.println("F8 -> Opening Logfile");
-                    // TODO: 14.03.2021 @Kilian
+
+                    File logDirectory = new File("log");
+                    File[] logFiles = logDirectory.listFiles();
+
+                    if (!logDirectory.exists() || !logDirectory.isDirectory() || logFiles == null || logFiles.length == 0) {
+                        outputArea.setText("Could not load any logfiles.");
+                        break;
+                    }
+
+                    Comparator<File> compareByTimestamps = (f1, f2) -> {
+                        int ts1 = Integer.parseInt(f1.getName()
+                                                     .split("\\.")[0]
+                                                           .split("_")[2]
+                        );
+                        int ts2 = Integer.parseInt(f2.getName()
+                                                     .split("\\.")[0]
+                                                           .split("_")[2]
+                        );
+                        return Integer.compare(ts1, ts2);
+                    };
+
+                    File latestLog = Arrays.stream(logFiles).max(compareByTimestamps).get();
+                    try {
+                        FileInputStream fis = new FileInputStream(latestLog);
+                        outputArea.setText(new String(
+                                fis.readAllBytes()
+                        ));
+                        fis.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        outputArea.setText("Could not load latest logfile.");
+                    }
                     break;
             }
         });
         primaryStage.show();
     }
+
 
     private void execute(TextArea commandLineArea, TextArea outputArea) {
         String output;
