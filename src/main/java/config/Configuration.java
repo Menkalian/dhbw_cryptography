@@ -12,6 +12,4 @@ public enum Configuration {
 
 
     public String databaseFile = "data" + File.separator + "msa.db";
-
-    public Database msaDatabase;
 }

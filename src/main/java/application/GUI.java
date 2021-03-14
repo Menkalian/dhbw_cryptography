@@ -1,5 +1,7 @@
 package application;
 
+import controller.CQLInterpreter;
+import controller.IInterpreter;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,9 +12,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.hsqldb.server.HsqlServerFactory;
+import network.EnterpriseNetwork;
 
 public class GUI extends Application {
+    private final IInterpreter interpreter = new CQLInterpreter(new EnterpriseNetwork());
+
     public void start(Stage primaryStage) {
         primaryStage.setTitle("MSA | Mergentheim/Mosbach Security Agency");
 
@@ -37,6 +41,13 @@ public class GUI extends Application {
         executeButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 System.out.println("[execute] pressed");
+                String output;
+                try {
+                    output = interpreter.execute(commandLineArea.getText());
+                } catch (Exception ex) {
+                    output = "Could not execute query:\n" + ex.getMessage();
+                }
+                outputArea.setText(output);
             }
         });
 
