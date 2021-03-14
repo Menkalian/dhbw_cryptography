@@ -13,7 +13,7 @@ task buildJar(type: Jar) {
     project.archivesBaseName = "rsa_cracker"
 
     manifest {
-        attributes["Main-Class"] = "Rsa_cracker"
+        attributes["Main-Class"] = "Cracker"
     }
 
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }

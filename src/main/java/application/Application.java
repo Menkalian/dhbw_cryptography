@@ -9,5 +9,7 @@ public class Application {
         // Run Non-Interactive Simulation
         EnterpriseNetwork network = new EnterpriseNetwork();
         IInterpreter interpreter = new CQLInterpreter(network);
+
+        System.out.println(interpreter.execute("crack encrypted message \"caesar\" using rsa and keyfile keys/rsa_1_pub.json"));
     }
 }

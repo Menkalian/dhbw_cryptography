@@ -13,7 +13,7 @@ task buildJar(type: Jar) {
     project.archivesBaseName = "shift_cracker"
 
     manifest {
-        attributes["Main-Class"] = "Shift_cracker"
+        attributes["Main-Class"] = "Cracker"
     }
 
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
