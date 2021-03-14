@@ -11,7 +11,9 @@
       <option name="taskNames">
         <list>
           <option value="clean" />
+          <option value="cleanComponents" />
           <option value="build" />
+          <option value="buildComponents" />
         </list>
       </option>
       <option name="vmOptions" value="" />
