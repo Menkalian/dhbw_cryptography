@@ -1,6 +1,10 @@
 package network.client;
 
+import data.Database;
+import encryption.EncryptionUtil;
 import event.MessageEvent;
+
+import java.io.File;
 
 public class EnterpriseBranch extends Participant {
     public EnterpriseBranch(String name) {
@@ -9,6 +13,25 @@ public class EnterpriseBranch extends Participant {
 
     @Override
     public void receiveMessage(MessageEvent message) {
-        System.out.println(message);
+        try {
+            Object decryptorPort = EncryptionUtil.loadVerifiedJar(message.getAlgorithm() + ".jar");
+
+            String keyfileName;
+            if (message.getAlgorithm().equals("rsa")) {
+                keyfileName = message.getKeyFile().split(";")[1];
+            } else {
+                keyfileName = message.getKeyFile();
+            }
+            File keyfile = new File(keyfileName);
+
+            String plain = (String) decryptorPort.getClass().getDeclaredMethod("decrypt", String.class, File.class)
+                                                 .invoke(decryptorPort, message.getMessage(), keyfile);
+
+            Database.instance.insertMessageInPostbox(message.getFrom().getName(), getName(), plain);
+
+        } catch (Exception ex) {
+            System.err.println("Something went wrong when receiving the Message.");
+            ex.printStackTrace();
+        }
     }
 }

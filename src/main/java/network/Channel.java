@@ -25,8 +25,16 @@ public class Channel {
             throw new RuntimeException("Could not create Channel");
         }
 
+        // TODO: 14.03.2021 @Johannes: Diesen Konstruktor für create channel nutzen.
+
         network.subscribe(this);
         Database.instance.createChannel(this);
+    }
+
+    public Channel(String name, Participant participant01, Participant participant02) {
+        this.name = name;
+        this.participant01 = participant01;
+        this.participant02 = participant02;
     }
 
     @Subscribe
@@ -45,8 +53,16 @@ public class Channel {
         to.receiveMessage(event);
 
         if (!intruders.isEmpty()) {
-            // Remove keyfile from Message
-            MessageEvent intruderMessage = new MessageEvent(event.getFrom(), event.getChannel(), event.getMessage(), event.getAlgorithm(), "");
+            // Remove (private) keyfile from Message
+
+            String keyfile;
+            if (event.getAlgorithm().equals("rsa")) {
+                keyfile = event.getKeyFile().split(";")[0];
+            } else {
+                keyfile = "";
+            }
+
+            MessageEvent intruderMessage = new MessageEvent(event.getFrom(), event.getChannel(), event.getMessage(), event.getAlgorithm(), keyfile);
             intruders.forEach(i -> i.receiveMessage(intruderMessage));
         }
     }

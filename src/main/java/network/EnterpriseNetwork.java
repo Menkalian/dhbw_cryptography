@@ -2,12 +2,10 @@ package network;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import data.Database;
 import event.Event;
-import network.client.EnterpriseBranch;
-import network.client.Intruder;
 import network.client.Participant;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,17 +20,9 @@ public class EnterpriseNetwork {
         participants = new LinkedList<>();
         channels = new LinkedList<>();
 
-        participants.add(new EnterpriseBranch("branch_hkg"));
-        participants.add(new EnterpriseBranch("branch_cpt"));
-        participants.add(new EnterpriseBranch("branch_sfo"));
-        participants.add(new EnterpriseBranch("branch_syd"));
-        participants.add(new EnterpriseBranch("branch_wuh"));
-        participants.add(new Intruder("msa"));
-
-        channels.add(new Channel("hkg_wuh", "branch_hkg", "branch_wuh", this));
-        channels.add(new Channel("hkg_cpt", "branch_hkg", "branch_cpt", this));
-        channels.add(new Channel("cpt_syd", "branch_cpt", "branch_syd", this));
-        channels.add(new Channel("syd_sfo", "branch_syd", "branch_sfo", this));
+        participants.addAll(Database.instance.getParticipants());
+        channels.addAll(Database.instance.getChannels());
+        channels.forEach(this::subscribe);
     }
 
     public void subscribe(Channel subscriber) {
@@ -49,10 +39,10 @@ public class EnterpriseNetwork {
     }
 
     public List<Channel> getChannels() {
-        return Collections.unmodifiableList(channels);
+        return channels;
     }
 
     public List<Participant> getParticipants() {
-        return Collections.unmodifiableList(participants);
+        return participants;
     }
 }
