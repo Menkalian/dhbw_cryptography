@@ -1,5 +1,6 @@
 package network.client;
 
+import data.Database;
 import event.MessageEvent;
 
 public abstract class Participant {
@@ -24,6 +25,7 @@ public abstract class Participant {
     public Participant(String name, ParticipantType type) {
         this.name = name;
         this.type = type;
+        Database.instance.createParticipantPostbox(this);
         // TODO: 14.03.2021 @Löh: Diese Zeile in den register participant Befehl übernehmen.
         // Database.instance.createParticipant(this);
     }

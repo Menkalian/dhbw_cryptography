@@ -1,5 +1,6 @@
 package network.client;
 
+import config.Configuration;
 import data.Database;
 import encryption.EncryptionUtil;
 import event.MessageEvent;
@@ -14,7 +15,12 @@ public class EnterpriseBranch extends Participant {
     @Override
     public void receiveMessage(MessageEvent message) {
         try {
-            Object decryptorPort = EncryptionUtil.loadVerifiedJar(message.getAlgorithm() + ".jar");
+            Object decryptorPort;
+            if (message.getAlgorithm().equals("rsa")) {
+                decryptorPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToRsa);
+            } else {
+                decryptorPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToShift);
+            }
 
             String keyfileName;
             if (message.getAlgorithm().equals("rsa")) {

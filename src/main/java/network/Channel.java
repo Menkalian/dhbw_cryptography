@@ -44,7 +44,7 @@ public class Channel {
             return;
 
         Participant to;
-        if (event.getFrom() == participant01) {
+        if (event.getFrom().getName().equals(participant01.getName())) {
             to = participant02;
         } else {
             to = participant01;
