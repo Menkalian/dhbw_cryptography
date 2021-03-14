@@ -17,9 +17,9 @@ import java.util.concurrent.TimeoutException;
 
 public class CrackCommand implements ICommand {
     private final boolean isRsa;
+    private final String message;
     private Object crackerPort;
     private File pubKeyFile;
-    private String message;
 
     public CrackCommand(String query) {
         if (!query.matches("crack encrypted message \".*\" using ((shift)|(rsa and keyfile .*))")) {
