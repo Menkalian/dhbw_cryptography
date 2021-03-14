@@ -23,14 +23,18 @@ public class SendCommand implements ICommand {
                     "Invalid Syntax. Syntax for sending is 'send message \"[msg]\" from [participant01] to [participant02] using [algorithm] and keyfile [filename]'"
             );
         }
-
         // Parse params (structure is already checked above, so we can assume a correct query here)
-        String[] tokens = query.split(" ", 12);
-        plainMsg = tokens[2].substring(1, tokens[2].length() - 1);
-        fromName = tokens[4];
-        toName = tokens[6];
-        algorithm = tokens[8];
-        keyfileName = tokens[11];
+
+        int msgStart = query.indexOf('"');
+        int msgEnd = query.lastIndexOf('"');
+        String[] tokens = query.substring(msgEnd + 2).split(" ", 9);
+
+        plainMsg = query.substring(msgStart + 1, msgEnd);
+
+        fromName = tokens[1];
+        toName = tokens[3];
+        algorithm = tokens[5];
+        keyfileName = tokens[8];
     }
 
     @Override
@@ -79,6 +83,7 @@ public class SendCommand implements ICommand {
 
             message = (String) encryptorPort.getClass().getDeclaredMethod("encrypt", String.class, File.class)
                                             .invoke(encryptorPort, plainMsg, encryptionKey);
+            System.out.println(message);
         } catch (Exception ex) {
             System.err.println("Could not encrypt message");
             ex.printStackTrace();

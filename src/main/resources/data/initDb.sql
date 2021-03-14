@@ -40,13 +40,13 @@ CREATE TABLE IF NOT EXISTS channel
 
 CREATE TABLE IF NOT EXISTS messages
 (
-    id                  TINYINT     NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1),
-    participant_from_id TINYINT     NOT NULL,
-    participant_to_id   TINYINT     NOT NULL,
-    plain_message       VARCHAR(50) NOT NULL,
-    algorithm_id        TINYINT     NOT NULL,
-    encrypted_message   VARCHAR(50) NOT NULL,
-    keyfile             VARCHAR(20) NOT NULL,
+    id                  TINYINT      NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1),
+    participant_from_id TINYINT      NOT NULL,
+    participant_to_id   TINYINT      NOT NULL,
+    plain_message       VARCHAR(50)  NOT NULL,
+    algorithm_id        TINYINT      NOT NULL,
+    encrypted_message   VARCHAR(255) NOT NULL, -- Dieser Wert muss leider so groß sein, da die verschlüsselten Nachrichten oft länger sind als die Plaintext Nachrichten (besonders mit BASE64 Kodierung). Ohne BASE64 wird das nicht als String angenommen.
+    keyfile             VARCHAR(50)  NOT NULL, -- sorry, Pfade sind leider auch länger als 20 chars
     timestamp           INTEGER,
 
     PRIMARY KEY (id),
