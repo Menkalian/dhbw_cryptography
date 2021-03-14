@@ -1,0 +1,10 @@
+INSERT INTO messages
+    (participant_from_id, participant_to_id, plain_message, algorithm_id, encrypted_message, keyfile, timestamp)
+VALUES
+    ((SELECT id FROM participants WHERE name = '{{FROM_NAME}}'),
+     (SELECT id FROM participants WHERE name = '{{TO_NAME}}'),
+     '{{PLAIN}}',
+     (SELECT id FROM algorithms WHERE name = '{{ALGO}}'),
+     '{{CIPHER}}',
+     '{{KEY}}',
+     CURRENT_TIMESTAMP)

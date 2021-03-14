@@ -1,15 +1,22 @@
 package data;
 
 import config.Configuration;
+import event.MessageEvent;
 import network.Channel;
+import network.client.EnterpriseBranch;
+import network.client.Intruder;
 import network.client.Participant;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,11 +39,11 @@ public enum Database {
             String initScript = loadSql("initDb.sql");
             String initDataScript = loadSql("initData.sql");
 
-            Statement statement = dbConnection.createStatement();
-            statement.execute(dropScript);
-            statement.execute(initScript);
-            statement.execute(initDataScript);
-            statement.close();
+            if (countTables() < 5) { // 5 Tables is minimum for valid db-scheme
+                executeStatements(dropScript, initScript, initDataScript);
+            } else {
+                executeStatements(initScript);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("Database could not be initialized! Shuting down!");
@@ -73,6 +80,110 @@ public enum Database {
         } catch (IOException | SQLException e) {
             System.err.println("Could not update database");
             e.printStackTrace();
+        }
+    }
+
+    public void deleteChannel(String name) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("{{NAME}}", name);
+
+        try {
+            executeStatements(
+                    loadSqlTemplate("deleteChannel.sql.template", params)
+            );
+        } catch (IOException | SQLException e) {
+            System.err.println("Could not update database");
+            e.printStackTrace();
+        }
+    }
+
+    public void createMessage(MessageEvent messageEvent, String participantTo, String plainMessage) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("{{FROM_NAME}}", messageEvent.getFrom().getName());
+        params.put("{{TO_NAME}}", participantTo);
+        params.put("{{PLAIN}}", plainMessage);
+        params.put("{{ALGO}}", messageEvent.getAlgorithm());
+        params.put("{{CIPHER}}", messageEvent.getMessage());
+        params.put("{{KEY}}", messageEvent.getKeyFile());
+
+        try {
+            executeStatements(
+                    loadSqlTemplate("createMessage.sql.template", params)
+            );
+        } catch (IOException | SQLException e) {
+            System.err.println("Could not update database");
+            e.printStackTrace();
+        }
+    }
+
+    public void insertMessageInPostbox(String participantFrom, String participantTo, String plainMessage) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("{{FROM_NAME}}", participantFrom);
+        params.put("{{TO_NAME}}", participantTo);
+        params.put("{{PLAIN}}", plainMessage);
+
+        try {
+            executeStatements(
+                    loadSqlTemplate("createPostboxEntry.sql.template", params)
+            );
+        } catch (IOException | SQLException e) {
+            System.err.println("Could not update database");
+            e.printStackTrace();
+        }
+    }
+
+    public List<Participant> getParticipants() {
+        try {
+            Statement stmt = dbConnection.createStatement();
+            ResultSet result = stmt.executeQuery(loadSql("selectParticipants.sql"));
+            List<Participant> toReturn = new LinkedList<>();
+
+            while (result.next()){
+                if (result.getInt("type_id") == 1) {
+                    toReturn.add(new EnterpriseBranch(result.getString("name")));
+                } else {
+                    toReturn.add(new Intruder(result.getString("name")));
+                }
+            }
+
+            return toReturn;
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Channel> getChannels() {
+        try {
+            Statement stmt = dbConnection.createStatement();
+            ResultSet result = stmt.executeQuery(loadSql("selectChannels.sql"));
+            List<Participant> participants = getParticipants();
+            List<Channel> toReturn = new LinkedList<>();
+
+            while (result.next()) {
+                toReturn.add(new Channel(
+                        result.getString("name"),
+                        participants.get(result.getInt("participant_01")),
+                        participants.get(result.getInt("participant_02"))
+                ));
+            }
+
+            return toReturn;
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    private int countTables() {
+        try {
+            Statement stmt = dbConnection.createStatement();
+            ResultSet result = stmt.executeQuery(loadSql("countTables.sql"));
+            result.next();
+            return result.getInt("cnt");
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+            return 0;
         }
     }
 
