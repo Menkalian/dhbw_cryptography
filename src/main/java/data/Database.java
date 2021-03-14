@@ -58,7 +58,20 @@ public enum Database {
 
         try {
             executeStatements(
-                    loadSqlTemplate("createParticipant.sql.template", params),
+                    loadSqlTemplate("createParticipant.sql.template", params)
+            );
+        } catch (IOException | SQLException e) {
+            System.err.println("Could not update database");
+            e.printStackTrace();
+        }
+    }
+
+    public void createParticipantPostbox(Participant participant) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("{{NAME}}", participant.getName());
+
+        try {
+            executeStatements(
                     loadSqlTemplate("createPostbox.sql.template", params)
             );
         } catch (IOException | SQLException e) {
@@ -123,8 +136,10 @@ public enum Database {
         params.put("{{PLAIN}}", plainMessage);
 
         try {
+            String sql = loadSqlTemplate("createPostboxEntry.sql.template", params);
+            System.out.println(sql);
             executeStatements(
-                    loadSqlTemplate("createPostboxEntry.sql.template", params)
+                    sql
             );
         } catch (IOException | SQLException e) {
             System.err.println("Could not update database");
@@ -138,7 +153,7 @@ public enum Database {
             ResultSet result = stmt.executeQuery(loadSql("selectParticipants.sql"));
             List<Participant> toReturn = new LinkedList<>();
 
-            while (result.next()){
+            while (result.next()) {
                 if (result.getInt("type_id") == 1) {
                     toReturn.add(new EnterpriseBranch(result.getString("name")));
                 } else {
@@ -161,10 +176,27 @@ public enum Database {
             List<Channel> toReturn = new LinkedList<>();
 
             while (result.next()) {
+                Participant p01 = participants.stream().filter(p -> {
+                    try {
+                        return p.getName().equals(result.getString("participant01"));
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    return false;
+                }).findFirst().orElse(null);
+                Participant p02 = participants.stream().filter(p -> {
+                    try {
+                        return p.getName().equals(result.getString("participant02"));
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    return false;
+                }).findFirst().orElse(null);
+
                 toReturn.add(new Channel(
                         result.getString("name"),
-                        participants.get(result.getInt("participant_01")),
-                        participants.get(result.getInt("participant_02"))
+                        p01,
+                        p02
                 ));
             }
 
@@ -192,7 +224,6 @@ public enum Database {
         for (String sql : sqlStatements) {
             statement.executeUpdate(sql);
         }
-        statement.closeOnCompletion();
         statement.close();
     }
 
