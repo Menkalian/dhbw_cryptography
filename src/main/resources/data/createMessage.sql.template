@@ -7,4 +7,4 @@ VALUES
      (SELECT id FROM algorithms WHERE name = '{{ALGO}}'),
      '{{CIPHER}}',
      '{{KEY}}',
-     CURRENT_TIMESTAMP)
+     UNIX_TIMESTAMP(CURRENT_TIMESTAMP));

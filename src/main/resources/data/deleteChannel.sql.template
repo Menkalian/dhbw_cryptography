@@ -1,2 +1,2 @@
 DELETE FROM channel
-WHERE name = '{{NAME}}'
+WHERE name = '{{NAME}}';

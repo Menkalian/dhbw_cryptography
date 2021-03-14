@@ -2,4 +2,4 @@ INSERT INTO postbox_{{TO_NAME}}
     (participant_from_id, message, timestamp)
 VALUES
     ((SELECT id FROM participants WHERE name = '{{FROM_NAME}}'),
-     '{{PLAIN}}', CURRENT_TIMESTAMP)
+     '{{PLAIN}}', UNIX_TIMESTAMP(CURRENT_TIMESTAMP));

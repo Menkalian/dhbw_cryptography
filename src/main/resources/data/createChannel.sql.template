@@ -4,4 +4,3 @@ VALUES
     ('{{CHANNEL_NAME}}',
      (SELECT id FROM participants WHERE name = '{{NAME_01}}'),
       (SELECT id FROM participants WHERE name = '{{NAME_02}}'));
-COMMIT;

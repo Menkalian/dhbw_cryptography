@@ -1,3 +1,2 @@
 INSERT INTO participants (name, type_id)
 VALUES ('{{NAME}}', {{TYPE}});
-COMMIT;
