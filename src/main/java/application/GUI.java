@@ -58,12 +58,12 @@ public class GUI extends Application {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case F3:
-                    System.out.println("F5 -> Executing Query");
-                    execute(commandLineArea, outputArea);
-                    break;
-                case F5:
                     System.out.println("F3 -> Debug Mode");
                     // TODO: 14.03.2021 @Johannes
+                    break;
+                case F5:
+                    System.out.println("F5 -> Executing Query");
+                    execute(commandLineArea, outputArea);
                     break;
                 case F8:
                     System.out.println("F8 -> Opening Logfile");
