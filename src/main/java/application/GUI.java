@@ -3,8 +3,6 @@ package application;
 import controller.CQLInterpreter;
 import controller.IInterpreter;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -38,24 +36,14 @@ public class GUI extends Application {
         outputArea.setWrapText(true);
         outputArea.setEditable(false);
 
-        executeButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                System.out.println("[execute] pressed");
-                String output;
-                try {
-                    output = interpreter.execute(commandLineArea.getText());
-                } catch (Exception ex) {
-                    output = "Could not execute query:\n" + ex.getMessage();
-                }
-                outputArea.setText(output);
-            }
+        executeButton.setOnAction(event -> {
+            System.out.println("[execute] pressed");
+            execute(commandLineArea, outputArea);
         });
 
-        closeButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {
-                System.out.println("[close] pressed");
-                System.exit(0);
-            }
+        closeButton.setOnAction(actionEvent -> {
+            System.out.println("[close] pressed");
+            System.exit(0);
         });
 
         hBox.getChildren().addAll(executeButton, closeButton);
@@ -66,6 +54,33 @@ public class GUI extends Application {
 
         Scene scene = new Scene(vbox, 950, 500);
         primaryStage.setScene(scene);
+
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case F3:
+                    System.out.println("F5 -> Executing Query");
+                    execute(commandLineArea, outputArea);
+                    break;
+                case F5:
+                    System.out.println("F3 -> Debug Mode");
+                    // TODO: 14.03.2021 @Johannes
+                    break;
+                case F8:
+                    System.out.println("F8 -> Opening Logfile");
+                    // TODO: 14.03.2021 @Kilian
+                    break;
+            }
+        });
         primaryStage.show();
+    }
+
+    private void execute(TextArea commandLineArea, TextArea outputArea) {
+        String output;
+        try {
+            output = interpreter.execute(commandLineArea.getText());
+        } catch (Exception ex) {
+            output = "Could not execute query:\n" + ex.getMessage();
+        }
+        outputArea.setText(output);
     }
 }
