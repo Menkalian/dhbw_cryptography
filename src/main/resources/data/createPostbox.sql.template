@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS postbox_{{PARTICIPANT}}
+DROP TABLE postbox_{{NAME}} IF EXISTS;
+CREATE TABLE IF NOT EXISTS postbox_{{NAME}}
 (
     id                  TINYINT     NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1),
     participant_from_id TINYINT     NOT NULL,
@@ -8,3 +9,4 @@ CREATE TABLE IF NOT EXISTS postbox_{{PARTICIPANT}}
     PRIMARY KEY (id),
     FOREIGN KEY (participant_from_id) REFERENCES participants (id),
 );
+COMMIT;
