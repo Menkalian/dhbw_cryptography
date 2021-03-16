@@ -1,7 +1,7 @@
 package controller.command;
 
 import config.Configuration;
-import encryption.EncryptionUtil;
+import components.JarUtil;
 import network.EnterpriseNetwork;
 
 import java.io.File;
@@ -34,10 +34,10 @@ public class CrackCommand implements ICommand {
         isRsa = modeInstructions.contains("using rsa and keyfile");
         try {
             if (isRsa) {
-                crackerPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToRsaCracker);
+                crackerPort = JarUtil.loadVerifiedJar(Configuration.instance.pathToRsaCracker);
                 pubKeyFile = new File(modeInstructions.substring(" using rsa and keyfile ".length()));
             } else {
-                crackerPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToShiftCracker);
+                crackerPort = JarUtil.loadVerifiedJar(Configuration.instance.pathToShiftCracker);
             }
         } catch (IOException | InterruptedException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();

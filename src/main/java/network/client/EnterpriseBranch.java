@@ -2,7 +2,7 @@ package network.client;
 
 import config.Configuration;
 import data.Database;
-import encryption.EncryptionUtil;
+import components.JarUtil;
 import event.MessageEvent;
 
 import java.io.File;
@@ -17,9 +17,9 @@ public class EnterpriseBranch extends Participant {
         try {
             Object decryptorPort;
             if (message.getAlgorithm().equals("rsa")) {
-                decryptorPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToRsa);
+                decryptorPort = JarUtil.loadVerifiedJar(Configuration.instance.pathToRsa);
             } else {
-                decryptorPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToShift);
+                decryptorPort = JarUtil.loadVerifiedJar(Configuration.instance.pathToShift);
             }
 
             String keyfileName;

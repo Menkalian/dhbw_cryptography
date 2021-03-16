@@ -2,7 +2,7 @@ package controller.command;
 
 import config.Configuration;
 import data.Database;
-import encryption.EncryptionUtil;
+import components.JarUtil;
 import event.MessageEvent;
 import network.Channel;
 import network.EnterpriseNetwork;
@@ -76,9 +76,9 @@ public class SendCommand implements ICommand {
         try {
             Object encryptorPort;
             if (algorithm.equals("rsa")) {
-                encryptorPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToRsa);
+                encryptorPort = JarUtil.loadVerifiedJar(Configuration.instance.pathToRsa);
             } else {
-                encryptorPort = EncryptionUtil.loadVerifiedJar(Configuration.instance.pathToShift);
+                encryptorPort = JarUtil.loadVerifiedJar(Configuration.instance.pathToShift);
             }
 
             message = (String) encryptorPort.getClass().getDeclaredMethod("encrypt", String.class, File.class)

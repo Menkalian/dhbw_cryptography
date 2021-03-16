@@ -1,4 +1,4 @@
-package encryption;
+package components;
 
 import config.Configuration;
 
@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public abstract class EncryptionUtil {
+public abstract class JarUtil {
     private static boolean keystoreReady = false;
 
     public static Object loadVerifiedJar(String jarPath) throws IOException, InterruptedException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
@@ -22,7 +22,7 @@ public abstract class EncryptionUtil {
             String mainClass = manifest.getMainAttributes().getValue("Main-Class");
 
             URL[] urls = {new File(jarPath).toURI().toURL()};
-            URLClassLoader urlClassLoader = new URLClassLoader(urls, EncryptionUtil.class.getClassLoader());
+            URLClassLoader urlClassLoader = new URLClassLoader(urls, JarUtil.class.getClassLoader());
             Class<?> clazz = Class.forName(mainClass, true, urlClassLoader);
             Object instance = clazz.getMethod("getInstance").invoke(clazz);
             return clazz.getDeclaredField("port").get(instance);
@@ -41,7 +41,7 @@ public abstract class EncryptionUtil {
             signatureFile.createNewFile();
             signatureFile.deleteOnExit();
 
-            Objects.requireNonNull(EncryptionUtil.class.getClassLoader().getResourceAsStream("keystore.jks")).
+            Objects.requireNonNull(JarUtil.class.getClassLoader().getResourceAsStream("keystore.jks")).
                     transferTo(new FileOutputStream(signatureFile));
 
             keystoreReady = true;
