@@ -3,6 +3,7 @@ S2: 2627585
 
 NOTE: Wir haben die Datenbank bereits aufgesetzt bevor Sie das Codebeispiel geschickt haben.
 Daher wird sich der Setup-Code vermutlich unterscheiden, aber die Datenbankstruktur bleibt gleich.
+Gleiches gilt auch für die JAR-Signatur.
 
 01 [S1 und S2] Basisarchitektur
 
