@@ -1,5 +1,6 @@
 package network.client;
 
+import com.google.common.eventbus.Subscribe;
 import data.Database;
 import event.MessageEvent;
 
@@ -38,5 +39,6 @@ public abstract class Participant {
         return type;
     }
 
+    @Subscribe
     public abstract void receiveMessage(MessageEvent message);
 }
