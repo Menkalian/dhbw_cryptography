@@ -4,7 +4,7 @@ import network.EnterpriseNetwork;
 
 public class RegisterCommand implements ICommand {
     public RegisterCommand(String query) {
-        
+
     }
 
     @Override

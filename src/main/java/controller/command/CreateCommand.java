@@ -4,7 +4,7 @@ import network.EnterpriseNetwork;
 
 public class CreateCommand implements ICommand {
     public CreateCommand(String query) {
-        
+
     }
 
     @Override

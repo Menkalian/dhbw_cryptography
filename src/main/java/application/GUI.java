@@ -24,6 +24,10 @@ public class GUI extends Application {
     private final IInterpreter interpreter = new CQLInterpreter(new EnterpriseNetwork());
     private PrintStream originalPrintStream = null;
 
+    public static void outputMessage(String msg) {
+        outputArea.appendText("\n" + msg);
+    }
+
     public void start(Stage primaryStage) {
         primaryStage.setTitle("MSA | Mergentheim/Mosbach Security Agency");
 
@@ -88,12 +92,12 @@ public class GUI extends Application {
 
                     Comparator<File> compareByTimestamps = (f1, f2) -> {
                         int ts1 = Integer.parseInt(f1.getName()
-                                .split("\\.")[0]
-                                .split("_")[2]
+                                                     .split("\\.")[0]
+                                                           .split("_")[2]
                         );
                         int ts2 = Integer.parseInt(f2.getName()
-                                .split("\\.")[0]
-                                .split("_")[2]
+                                                     .split("\\.")[0]
+                                                           .split("_")[2]
                         );
                         return Integer.compare(ts1, ts2);
                     };
@@ -114,11 +118,6 @@ public class GUI extends Application {
         });
         primaryStage.show();
     }
-
-    public static void outputMessage(String msg) {
-        outputArea.appendText("\n" + msg);
-    }
-
 
     private void execute(TextArea commandLineArea, TextArea outputArea) {
         String output;

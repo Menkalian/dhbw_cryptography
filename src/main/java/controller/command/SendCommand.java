@@ -1,8 +1,8 @@
 package controller.command;
 
+import components.JarUtil;
 import config.Configuration;
 import data.Database;
-import components.JarUtil;
 import event.MessageEvent;
 import network.Channel;
 import network.EnterpriseNetwork;

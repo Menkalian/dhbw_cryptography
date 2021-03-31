@@ -1,7 +1,7 @@
 package controller.command;
 
-import config.Configuration;
 import components.JarUtil;
+import config.Configuration;
 import network.EnterpriseNetwork;
 
 import java.io.File;

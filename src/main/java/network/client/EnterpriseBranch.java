@@ -1,9 +1,9 @@
 package network.client;
 
 import com.google.common.eventbus.Subscribe;
+import components.JarUtil;
 import config.Configuration;
 import data.Database;
-import components.JarUtil;
 import event.MessageEvent;
 
 import java.io.File;
@@ -16,7 +16,7 @@ public class EnterpriseBranch extends Participant {
     @Override
     @Subscribe
     public void receiveMessage(MessageEvent message) {
-        if(message.getFrom().getName().equals(getName()))
+        if (message.getFrom().getName().equals(getName()))
             return;
 
         try {

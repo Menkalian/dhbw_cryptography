@@ -14,23 +14,23 @@ public class Encryption {
         return instance;
     }
 
-    private String innerEncrypt (String plainMessage, File keyfile) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    JsonParser jsonParser = new JsonParser();
-                    int key = 0;
-                    try {
-                        JsonParser.JsonObject obj = jsonParser.parse(keyfile);
-                        key = obj.getInt("n");
-                    } catch (Exception e){
-                        System.out.println("help");
-                    }
+    private String innerEncrypt(String plainMessage, File keyfile) {
+        StringBuilder stringBuilder = new StringBuilder();
+        JsonParser jsonParser = new JsonParser();
+        int key = 0;
+        try {
+            JsonParser.JsonObject obj = jsonParser.parse(keyfile);
+            key = obj.getInt("n");
+        } catch (Exception e) {
+            System.out.println("help");
+        }
 
-                    for (int i = 0; i < plainMessage.length(); i++) {
-                        char character = (char) (plainMessage.codePointAt(i) + key);
-                        stringBuilder.append(character);
-                    }
+        for (int i = 0 ; i < plainMessage.length() ; i++) {
+            char character = (char) (plainMessage.codePointAt(i) + key);
+            stringBuilder.append(character);
+        }
 
-                    return stringBuilder.toString();
+        return stringBuilder.toString();
     }
 
     // TODO a-zA-Z
@@ -38,7 +38,7 @@ public class Encryption {
     public class Port implements IEncryption {
         @Override
         public String encrypt(String plainMessage, File keyfile) {
-            return innerEncrypt(plainMessage,keyfile);
+            return innerEncrypt(plainMessage, keyfile);
         }
 
         @Override
@@ -48,11 +48,11 @@ public class Encryption {
             int key = 0;
             try {
                 key = jsonParser.parse(keyfile).getInt("n");
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("help");
             }
 
-            for (int i = 0; i < encryptedMessage.length(); i++) {
+            for (int i = 0 ; i < encryptedMessage.length() ; i++) {
                 char character = (char) (encryptedMessage.codePointAt(i) - key);
                 stringBuilder.append(character);
             }

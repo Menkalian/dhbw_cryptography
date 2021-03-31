@@ -7,7 +7,6 @@ import network.client.EnterpriseBranch;
 import network.client.Intruder;
 import network.client.Participant;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
