@@ -14,19 +14,31 @@ public class Encryption {
         return instance;
     }
 
-    // TODO
+    // TODO a-zA-Z
 
     public class Port implements IEncryption {
         @Override
         public String encrypt(String plainMessage, File keyfile) {
-            // TODO: 11.03.2021
-            return plainMessage;
+            return innerEncrypt(plainMessage,keyfile);
         }
 
         @Override
         public String decrypt(String encryptedMessage, File keyfile) {
-            // TODO: 11.03.2021
-            return encryptedMessage;
+            StringBuilder stringBuilder = new StringBuilder();
+            JsonParser jsonParser = new JsonParser();
+            int key = 0;
+            try {
+                key = jsonParser.parse(keyfile).getInt("n");
+            } catch (Exception e){
+                System.out.println("help");
+            }
+
+            for (int i = 0; i < encryptedMessage.length(); i++) {
+                char character = (char) (encryptedMessage.codePointAt(i) - key);
+                stringBuilder.append(character);
+            }
+
+            return stringBuilder.toString();
         }
     }
 }
