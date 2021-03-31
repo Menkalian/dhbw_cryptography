@@ -18,6 +18,38 @@ public class Cracker {
         return instance;
     }
 
+    // Using Pollard Rho algorithm
+    private BigInteger findFactor(BigInteger n) {
+        BigInteger x = BigInteger.valueOf(2);
+        BigInteger y = x;
+        BigInteger g = BigInteger.ONE;
+
+        while (g.equals(BigInteger.ONE)) {
+            x = f(x, n);
+            y = f(f(y, n), n);
+            g = gcd(x.subtract(y).abs(), n);
+        }
+
+        return g;
+    }
+
+    // (x^2 + 1) mod n
+    private BigInteger f(BigInteger x, BigInteger n) {
+        return x.multiply(x).add(BigInteger.ONE).mod(n);
+    }
+
+    // Euclidian Algorithm
+    private BigInteger gcd(BigInteger a, BigInteger b) {
+        if (b.equals(BigInteger.ZERO)) {
+            return a;
+        }
+        return gcd(b, a.mod(b));
+    }
+
+    private BigInteger crypt(BigInteger message, BigInteger common, BigInteger keySpecific) {
+        return message.modPow(keySpecific, common);
+    }
+
     public class Port implements ICracker {
         @Override
         public String decrypt(String encryptedMessage, File publicKeyFile) {

@@ -3,7 +3,7 @@ package controller.command;
 import network.EnterpriseNetwork;
 
 public class EncryptCommand implements ICommand {
-    public EncryptCommand(String query) {
+    public EncryptCommand(String query, boolean isDebug) {
 
     }
 

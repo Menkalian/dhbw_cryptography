@@ -20,7 +20,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class GUI extends Application {
+    private static TextArea outputArea;
     private final IInterpreter interpreter = new CQLInterpreter(new EnterpriseNetwork());
+    private PrintStream originalPrintStream = null;
 
     public void start(Stage primaryStage) {
         primaryStage.setTitle("MSA | Mergentheim/Mosbach Security Agency");
@@ -42,6 +44,7 @@ public class GUI extends Application {
         TextArea outputArea = new TextArea();
         outputArea.setWrapText(true);
         outputArea.setEditable(false);
+        GUI.outputArea = outputArea;
 
         executeButton.setOnAction(event -> {
             System.out.println("[execute] pressed");
@@ -66,7 +69,7 @@ public class GUI extends Application {
             switch (event.getCode()) {
                 case F3:
                     System.out.println("F3 -> Debug Mode");
-                    // TODO: 14.03.2021 @Johannes
+                    interpreter.setDebugMode(!interpreter.isDebugMode());
                     break;
                 case F5:
                     System.out.println("F5 -> Executing Query");
@@ -85,12 +88,12 @@ public class GUI extends Application {
 
                     Comparator<File> compareByTimestamps = (f1, f2) -> {
                         int ts1 = Integer.parseInt(f1.getName()
-                                                     .split("\\.")[0]
-                                                           .split("_")[2]
+                                .split("\\.")[0]
+                                .split("_")[2]
                         );
                         int ts2 = Integer.parseInt(f2.getName()
-                                                     .split("\\.")[0]
-                                                           .split("_")[2]
+                                .split("\\.")[0]
+                                .split("_")[2]
                         );
                         return Integer.compare(ts1, ts2);
                     };
@@ -110,6 +113,10 @@ public class GUI extends Application {
             }
         });
         primaryStage.show();
+    }
+
+    public static void outputMessage(String msg) {
+        outputArea.appendText("\n" + msg);
     }
 
 

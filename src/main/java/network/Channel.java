@@ -25,8 +25,6 @@ public class Channel {
             throw new RuntimeException("Could not create Channel");
         }
 
-        // TODO: 14.03.2021 @Johannes: Diesen Konstruktor für create channel nutzen.
-
         network.subscribe(this);
         eventBus.register(this.participant01);
         eventBus.register(this.participant02);
@@ -66,7 +64,7 @@ public class Channel {
         return getName() + " | " + getParticipant01().getName() + " and " + getParticipant02().getName();
     }
 
-    private void intrude(Intruder intruder) {
+    public void intrude(Intruder intruder) {
         eventBus.register(intruder);
     }
 }

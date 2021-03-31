@@ -39,8 +39,8 @@ public class CQLInterpreter implements IInterpreter {
 
     private ICommand parse(String query) {
         return switch (query.split(" ")[0].toLowerCase(Locale.ROOT)) {
-            case "encrypt" -> new EncryptCommand(query);
-            case "decrypt" -> new DecryptCommand(query);
+            case "encrypt" -> new EncryptCommand(query, isDebugMode());
+            case "decrypt" -> new DecryptCommand(query, isDebugMode());
             case "crack" -> new CrackCommand(query);
             case "register" -> new RegisterCommand(query);
             case "create" -> new CreateCommand(query);
