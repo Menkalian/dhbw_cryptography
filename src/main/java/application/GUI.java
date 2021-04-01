@@ -15,17 +15,19 @@ import network.EnterpriseNetwork;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class GUI extends Application {
     private static TextArea outputArea;
     private final IInterpreter interpreter = new CQLInterpreter(new EnterpriseNetwork());
-    private PrintStream originalPrintStream = null;
 
     public static void outputMessage(String msg) {
-        outputArea.appendText("\n" + msg);
+        if (outputArea == null) {
+            System.out.println("\n--------------------\n" + msg);
+        } else {
+            outputArea.appendText("\n--------------------\n" + msg);
+        }
     }
 
     public void start(Stage primaryStage) {
@@ -86,7 +88,7 @@ public class GUI extends Application {
                     File[] logFiles = logDirectory.listFiles();
 
                     if (!logDirectory.exists() || !logDirectory.isDirectory() || logFiles == null || logFiles.length == 0) {
-                        outputArea.setText("Could not load any logfiles.");
+                        outputArea.appendText("\n--------------------\nCould not load any logfiles.");
                         break;
                     }
 
@@ -105,13 +107,13 @@ public class GUI extends Application {
                     File latestLog = Arrays.stream(logFiles).max(compareByTimestamps).get();
                     try {
                         FileInputStream fis = new FileInputStream(latestLog);
-                        outputArea.setText(new String(
+                        outputArea.appendText("\n--------------------\n" + new String(
                                 fis.readAllBytes()
                         ));
                         fis.close();
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                        outputArea.setText("Could not load latest logfile.");
+                        outputArea.appendText("\n--------------------\nCould not load latest logfile.");
                     }
                     break;
             }
@@ -126,6 +128,6 @@ public class GUI extends Application {
         } catch (Exception ex) {
             output = "Could not execute query:\n" + ex.getMessage();
         }
-        outputArea.setText(output);
+        outputArea.appendText("\n--------------------\n" + output);
     }
 }

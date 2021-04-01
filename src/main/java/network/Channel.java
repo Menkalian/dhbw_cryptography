@@ -25,6 +25,7 @@ public class Channel {
             throw new RuntimeException("Could not create Channel");
         }
 
+        network.getChannels().add(this);
         network.subscribe(this);
         eventBus.register(this.participant01);
         eventBus.register(this.participant02);

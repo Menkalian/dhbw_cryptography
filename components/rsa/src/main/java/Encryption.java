@@ -28,7 +28,7 @@ public class Encryption {
     public class Port implements IEncryption {
         @Override
         public String encrypt(String plainMessage, File publicKeyfile) {
-            System.out.println("Encrypting " + plainMessage + " with keyfile " + publicKeyfile)
+            System.out.println("Encrypting " + plainMessage + " with keyfile " + publicKeyfile);
             try {
                 JsonParser.JsonObject key = new JsonParser().parse(publicKeyfile);
                 BigInteger exponent = BigInteger.valueOf(key.getInt("e"));
@@ -67,7 +67,7 @@ public class Encryption {
 
         @Override
         public String decrypt(String encryptedMessage, File privateKeyfile) {
-            System.out.println("Decrypting " + encryptedMessage + " with keyfile " + privateKeyfile)
+            System.out.println("Decrypting " + encryptedMessage + " with keyfile " + privateKeyfile);
             try {
                 JsonParser.JsonObject key = new JsonParser().parse(privateKeyfile);
                 BigInteger exponent = BigInteger.valueOf(key.getInt("d"));
