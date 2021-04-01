@@ -27,8 +27,6 @@ public abstract class Participant {
         this.name = name;
         this.type = type;
         Database.instance.createParticipantPostbox(this);
-        // TODO: 14.03.2021 @Löh: Diese Zeile in den register participant Befehl übernehmen.
-        // Database.instance.createParticipant(this);
     }
 
     public String getName() {

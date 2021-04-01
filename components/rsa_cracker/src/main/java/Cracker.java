@@ -54,7 +54,7 @@ public class Cracker {
         @Override
         public String decrypt(String encryptedMessage, File publicKeyFile) {
 
-            System.out.println("Cracking " + encryptedMessage + " with Public keyfile " + publicKeyFile);
+            System.out.println("Cracking " + encryptedMessage + " using RSA with Public keyfile " + publicKeyFile);
             try {
                 JsonParser.JsonObject key = new JsonParser().parse(publicKeyFile);
                 BigInteger n = BigInteger.valueOf(key.getInt("n"));

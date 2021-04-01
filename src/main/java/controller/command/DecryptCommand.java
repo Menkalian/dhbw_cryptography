@@ -9,11 +9,20 @@ import java.time.Instant;
 
 public class DecryptCommand implements ICommand {
     PrintStream originalOut;
+    String message;
+    String algorithm;
+    String filePath;
 
     public DecryptCommand(String query, boolean isDebug) {
         originalOut = System.out;
-        String algorithm = "rsa"; // TODO: 31.03.2021 Set algo correct
 
+        //check if query matches
+
+        //query : encrypt message "[message]" using [algo] and keyfile [file]
+        String[] splitQuery = query.split("\"");
+        message = splitQuery[1];
+        algorithm = splitQuery[2].substring(7).split(" ")[0];
+        filePath = splitQuery[2].substring(20+algorithm.length());
 
         if (isDebug) {
             try {
@@ -27,13 +36,11 @@ public class DecryptCommand implements ICommand {
                 System.err.println("Could not activate debug mode");
             }
         }
-
-
     }
 
     @Override
     public String execute(EnterpriseNetwork network) {
-        // Do stuff
+        // iToDo : Get instance of matching algorithm and execute decrypt(message, file)
 
         System.setOut(originalOut);
         return "";

@@ -1,4 +1,5 @@
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 public class Encryption {
     // static instance
@@ -14,50 +15,89 @@ public class Encryption {
         return instance;
     }
 
-    private String innerEncrypt(String plainMessage, File keyfile) {
-        StringBuilder stringBuilder = new StringBuilder();
-        JsonParser jsonParser = new JsonParser();
-        int key = 0;
-        try {
-            JsonParser.JsonObject obj = jsonParser.parse(keyfile);
-            key = obj.getInt("n");
-        } catch (Exception e) {
-            System.out.println("help");
+    //ToDO : so richtig implementiert und verbesserungsvorschläge zur dokumentation?
+    private byte[] shiftString(byte[] data, int shiftKey) {
+        int[] dataCopy = new int[data.length];
+        for (int i = 0 ; i < data.length ; i++) {
+            dataCopy[i] = data[i];
         }
 
-        for (int i = 0 ; i < plainMessage.length() ; i++) {
-            char character = (char) (plainMessage.codePointAt(i) + key);
-            stringBuilder.append(character);
+        for (int x = 0 ; x <= data.length - 1 ; x++) {
+            dataCopy[x] = data[x];
+
+            if (data[x] >= 'A' && data[x] <= 'Z') {
+                dataCopy[x] += shiftKey;
+                if (dataCopy[x] > 'Z') {
+                    dataCopy[x] -= 26;
+                }
+                if (dataCopy[x] < 'A') {
+                    dataCopy[x] += 26;
+                }
+            } else if (data[x] >= 'a' && data[x] <= 'z') {
+                dataCopy[x] += shiftKey;
+                if (dataCopy[x] > 'z') {
+                    dataCopy[x] -= 26;
+                }
+                if (dataCopy[x] < 'a') {
+                    dataCopy[x] += 26;
+                }
+            }
         }
 
-        return stringBuilder.toString();
+        byte[] toReturn = new byte[dataCopy.length];
+        for (int i = 0 ; i < toReturn.length ; i++) {
+            toReturn[i] = (byte) dataCopy[i];
+        }
+
+        return toReturn;
     }
-
-    // TODO a-zA-Z
 
     public class Port implements IEncryption {
         @Override
         public String encrypt(String plainMessage, File keyfile) {
-            return innerEncrypt(plainMessage, keyfile);
+            System.out.println("Encrypting " + plainMessage + " with keyfile " + keyfile);
+            StringBuilder stringBuilder = new StringBuilder();
+            JsonParser jsonParser = new JsonParser();
+            int key = 0;
+            try {
+                JsonParser.JsonObject obj = jsonParser.parse(keyfile);
+                key = obj.getInt("n");
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            System.out.println("Shifting Characters from plainMessage " + key + "times");
+            byte[] cypher = shiftString(plainMessage.getBytes(StandardCharsets.UTF_8), -key);
+
+//            for (int i = 0; i < plainMessage.length(); i++) {
+//                char character = (char) (plainMessage.codePointAt(i) + key);
+//                stringBuilder.append(character);
+//            }
+
+            return cypher.toString();
         }
 
         @Override
         public String decrypt(String encryptedMessage, File keyfile) {
+            System.out.println("Decrypting " + encryptedMessage + " with keyfile " + keyfile);
             StringBuilder stringBuilder = new StringBuilder();
             JsonParser jsonParser = new JsonParser();
             int key = 0;
             try {
                 key = jsonParser.parse(keyfile).getInt("n");
-            } catch (Exception e) {
-                System.out.println("help");
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
-            for (int i = 0 ; i < encryptedMessage.length() ; i++) {
-                char character = (char) (encryptedMessage.codePointAt(i) - key);
-                stringBuilder.append(character);
-            }
+            System.out.println("Shifting Characters from encryptedMessage " + key + "times");
+            byte[] cypher = shiftString(encryptedMessage.getBytes(StandardCharsets.UTF_8), key);
 
-            return stringBuilder.toString();
+//            for (int i = 0; i < encryptedMessage.length(); i++) {
+//                char character = (char) (encryptedMessage.codePointAt(i) - key);
+//                stringBuilder.append(character);
+//            }
+
+            return cypher.toString();
         }
     }
 }
